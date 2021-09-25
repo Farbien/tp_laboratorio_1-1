@@ -45,24 +45,27 @@ float Restar (float primerNumero, float segundoNumero)
 	return resta;
 }
 
-/// @fn void Dividir(float, float)
-/// Divide el primer numero ingresado por el segundo. Muestra la división en caso de que puede ser -
-/// calculada y en caso de que no (cuando el segundo operando es 0) muestra un mensaje de error.
-/// @param primerNumero: es el primer operando.
-/// @param segundoNumero: es el segundo operando.
-void Dividir (float primerNumero, float segundoNumero)
+/// @fn int Dividir(float, float, float*)
+/// Divide dos números.
+/// @param primerNumero: es el primer operando, el dividendo.
+/// @param segundoNumero: es el seugndo operando, el divisor.
+/// @param division: es el puntero que me va a devolver el resultado de la división en caso de que sea posible calcularlo.
+/// @return retorna el valor de la bandera. 0 Si la división no se realizó y 1 en caso contrario.
+int Dividir (float primerNumero, float segundoNumero, float* division)
 {
-	float division;
+	int bandera;
+	float div;
 
-	if (segundoNumero == 0)
+    bandera = 0;
+
+    if (segundoNumero != 0)
 	{
-		printf("No es posible dividir por cero\n");
+		div = primerNumero / segundoNumero;
+		bandera = 1;
+		*division = div;
 	}
-	else
-	{
-		division = primerNumero / segundoNumero;
-		printf ("c)El resultado de %.2f / %f es: %.2f\n", primerNumero, segundoNumero, division);
-	}
+
+	return bandera;
 }
 
 /// @fn float Multiplicar(float, float)
@@ -79,33 +82,33 @@ float Multiplicar (float primerNumero, float segundoNumero)
 	return multiplicacion;
 }
 
-/// @fn void Factorial(float)
-/// Calcula el factorial de un número
-/// Como solo podemos calcular el factorial de número positivos enteros, defino el entero parteEnteraNumero, que nos va a devolver la parte entera del número ingresado.
-/// Si la parte entera de un número es igual al número significa que el número es un entero, y si además es positivo significa que vamos a poder calcular su factorial.
-/// En caso de que esto no se cumpla mostramos un mensaje de error.
-/// @param es el operando ingresado.
-void Factorial (float numero)
+/// @fn int Factorial(float, double*)
+/// Calcula el factorial de un número.
+/// @param numero: es el número ingresado al que se le va a calcular el factorial.
+/// @param factorial: es el puntero que va a guardar el valor del factorial en caso de que sea posible calcularlo.
+/// @return retorna la bandera del factorial. Devuelve 1 en caso de que se puede calcular y 0 en caso contrario.
+int Factorial (float numero, double* factorial)
 {
 	int parteEnteraNumero;
 	int contador;
-    double factorial;
+    double factorial1;
+    int banderaRetorno;
 
+    banderaRetorno = 0;
 	parteEnteraNumero = numero;
 
-	factorial = 1;
+	factorial1 = 1;
 
-	if (numero == parteEnteraNumero && numero>-1)
+	if (parteEnteraNumero == numero && numero >-1)
 	{
 		for (contador = numero; contador > 0; contador --)
 		{
-			factorial = factorial *contador;
+			factorial1 = factorial1 *contador;
 		}
 
-		printf ("e)El factorial de %.2f es: %.0lf \n", numero, factorial);
+		*factorial = factorial1;
+		banderaRetorno = 1;
 	}
-	else
-	{
-		printf ("¡¡No existe el factorial de %.2f!!\n", numero);
-	}
+
+	return banderaRetorno;
 }

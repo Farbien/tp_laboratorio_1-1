@@ -43,6 +43,10 @@ int main(void)
 	float resta;
 	float producto;
 	int seguir;
+	float division;
+	int banderaDivision;
+	double factorial;
+	int banderaFactorial;
 
 	seguir = 1;
 	banderaPrimerOperando = 1;
@@ -117,11 +121,42 @@ int main(void)
 				printf ("a)El resultado de %.2f + %.2f es %.2f\n", primerOperando, segundoOperando, suma);
 				resta = Restar (primerOperando, segundoOperando);
 				printf ("b)El resultado de %.2f - %.2f es %.2f\n", primerOperando, segundoOperando, resta);
-				Dividir (primerOperando, segundoOperando);
+
+				//div:
+				banderaDivision = Dividir (primerOperando, segundoOperando, &division);
+				if (banderaDivision == 1)
+				{
+					printf ("c)El resultado de %.2f / %f es: %.2f\n", primerOperando, segundoOperando, division);
+				}
+				else
+				{
+					printf ("c)Error!!! No es posible dividir por cero\n");
+				}
+
 				producto = Multiplicar (primerOperando, segundoOperando);
 				printf ("d)El resultado de %.2f*%.2f es: %.2f\n", primerOperando, segundoOperando, producto);
-				Factorial (primerOperando);
-				Factorial (segundoOperando);
+
+				//fact:
+				banderaFactorial = Factorial (primerOperando, &factorial);
+				if (banderaFactorial == 1)
+				{
+					printf ("e.1)El factorial de %.2f es %.2f\n", primerOperando, factorial);
+				}
+				else
+				{
+					printf ("e.1)No existe el factorial de %.2f\n", primerOperando);
+				}
+
+				banderaFactorial = Factorial (segundoOperando, &factorial);
+				if (banderaFactorial == 1)
+				{
+					printf ("e.2)El factorial de %.2f es %.2f\n", segundoOperando, factorial);
+				}
+				else
+				{
+					printf ("e.2)No existe el factorial de %.2f\n", segundoOperando);
+				}
+
 				printf ("---------------------------------------\n");
 				printf ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
 				break;
@@ -132,3 +167,4 @@ int main(void)
 			}
 	}
 }
+
