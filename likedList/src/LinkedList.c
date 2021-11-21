@@ -180,50 +180,7 @@ int test_addNode(LinkedList* this, int nodeIndex,void* pElement)
                         ( 0) Si funciono correctamente
  *
  */
-/*int ll_add(LinkedList* this, void* pElement)
-{
-	int retorno;
-	//Node* newNode;
-	int retornoAddNode;
-	//Node* lastNode;
-	int tamLista;
 
-	retorno = -1;
-
-	if (this != NULL)
-	{
-				newNode = (Node*) malloc (sizeof(Node));
-		newNode->pElement = pElement;
-		tamLista = ll_len(this);
-
-		retornoAddNode = addNode (this, tamLista, pElement);
-		if (retornoAddNode == 0)
-		{
-			retorno = 0;
-		}
-
-
-		if (tamLista == 0)
-		{
-			this->pFirstNode = newNode;
-			this->size ++;
-			newNode->pNextNode = NULL;
-		}
-		else
-		{
-			if (tamLista > 0)
-			{
-				lastNode = getNode (this, tamLista);
-				lastNode->pNextNode = newNode;
-				newNode->pNextNode = NULL;
-				this->size ++;
-			}
-		}
-
-	}
-	return retorno;
-}
-*/
 
 int ll_add(LinkedList* this, void* pElement)
 {
@@ -481,10 +438,6 @@ int ll_isEmpty(LinkedList* this)
  *
  */
 
-/* si me piden poner un elemento en la posición 0 y la lista tiene len = 0
-   voy a tener que ver como hacer para transformar esto en un add, en vez de pushear, es
-   decir, directamente agregamos y no hacemos nada más*/
-
 int ll_push(LinkedList* this, int index, void* pElement)
 {
     int retorno;
@@ -723,8 +676,6 @@ LinkedList* ll_clone(LinkedList* this)
  */
 int ll_sort(LinkedList* this, int (*pFunc)(void* ,void*), int order)
 {
-	/*Al momento de hacer un swap con el "int aux" llammamos a pFunc, que es la que nos
-	va a decir si hay que hacer ese intercambio o no*/
     int retorno;
     int i;
     int j;
