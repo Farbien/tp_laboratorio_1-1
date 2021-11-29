@@ -11,7 +11,7 @@
      7. Ordenar empleados
      8. Guardar los datos de los empleados en el archivo data.csv (modo texto).
      9. Guardar los datos de los empleados en el archivo data.csv (modo binario).
-    10. Salr
+    10. Salir
 *****************************************************/
 
 int main()
@@ -31,7 +31,6 @@ int main()
 	int retornoControllerSaveBinary;
 	int seguir;
 	int opcion;
-	int i;
 
 	listaEmpleados = ll_newLinkedList();
 
@@ -55,8 +54,8 @@ int main()
 			}
 			break;
 
-		case 2:
-			retornoControllerBinary = controller_loadFromBinary ("data.csv", listaEmpleados);
+			case 2:
+			retornoControllerBinary = controller_loadFromBinary ("output.binary", listaEmpleados);
 			if (retornoControllerBinary == 1)
 			{
 				printf ("\nEmpleados cargados en modo binaria");
@@ -91,7 +90,7 @@ int main()
 			break;
 
 		case 9:
-			retornoControllerSaveBinary = controller_saveAsBinary("data.csv", listaEmpleados);
+			retornoControllerSaveBinary = controller_saveAsBinary("data.bin", listaEmpleados);
 			if (retornoControllerSaveBinary == 1)
 			{
 				printf ("Datos cargados en modo binario");

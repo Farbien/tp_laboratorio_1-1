@@ -35,7 +35,7 @@ detallan las funciones que esta biblioteca debe tener.
 #include <string.h>
 #include <ctype.h>
 #include "Biblioteca.h"
-#define TAM 1000
+#define TAMCLIENTES 1000
 #define MIN 1
 #define MAX 10
 
@@ -44,17 +44,18 @@ int main(void)
 {
 	setbuf (stdout, NULL);
 
-	Employee empleados[TAM];
-	int listaDadosDeBaja [TAM];
+	Employee empleados[TAMCLIENTES];
+	int listaDadosDeBaja [TAMCLIENTES];
 
 	int banderaPrimerIngreso;
 
-	//datos empleado
+	/*	//datos empleado*/
 	int id;
 	char name[51];
 	char lastName[51];
 	float salary;
 	int sector;
+
 
 	int opcion;
 	char subopcion;
@@ -71,14 +72,12 @@ int main(void)
 	float sumaSalariosMain;
 	int cantSuperanSalarioProm;
 
-	int retornoVerif;
-
 	banderaPrimerIngreso = 0;
 
 	seguir = 's';
 
-	InitEmployees (empleados, TAM); //inicializo los estados de los vectores
-	Inicializar (listaDadosDeBaja, TAM);
+	InitEmployees (empleados, TAMCLIENTES); //inicializo los estados de los vectores
+	Inicializar (listaDadosDeBaja, TAMCLIENTES);
 
 	do {
 	printf ("\nMenú de opciones: ");
@@ -86,14 +85,8 @@ int main(void)
 	printf ("\n2)Modificar: ");
 	printf ("\n3)Eliminar empleado: ");
 	printf ("\n4)Informar: \n a)Listado de los empleados ordenados alfabéticamente por Apellido y Sector \n b)Total y promedio de los salarios, y cuántos empleados superan el salario promedio");
-	printf ("\nSeleccione una opción: ");
-	scanf ("%d", &opcion);
-	retornoVerif = VerificarRango (opcion, MIN, MAX);
-	while (retornoVerif == 0)
-	{
-		printf ("Seleccione una opción entre los rangos establecidos: \n");
-		scanf ("%d", &opcion);
-	}
+
+	opcion = PedirEntero ("Ingrese una opción: \n", 1, 4);
 
 	if (banderaPrimerIngreso == 0)
 	{
@@ -107,14 +100,14 @@ int main(void)
 	{
 	case 1:
 		//Arreglar bien los retornos:
-		PedirEmpleado (empleados, TAM, listaDadosDeBaja, &id, lastName, name, &salary, &sector);
-		AddEmployee(empleados, TAM, id, lastName, name, salary, sector);
+		PedirEmpleado (empleados, TAMCLIENTES, listaDadosDeBaja, &id, lastName, name, &salary, &sector);
+		AddEmployee(empleados, TAMCLIENTES, id, lastName, name, salary, sector);
 		banderaPrimerIngreso = 1;
 		break;
 
 	case 2:
-		PrintEmployees (empleados, TAM);
-		retornoModif = ModificarDato (empleados, TAM);
+		PrintEmployees (empleados, TAMCLIENTES);
+		retornoModif = ModificarDato (empleados, TAMCLIENTES);
 		if (retornoModif == 0)
 		{
 			printf ("No se ha realizado ninguna modificación\n");
@@ -122,9 +115,9 @@ int main(void)
 		break;
 
 	case 3:
-		PrintEmployees (empleados, TAM);
-		idParaDarDeBaja = PedirEntero ("Ingrese el id a dar de baja: \n");
-		baja = RemoveEmployee (empleados, TAM, idParaDarDeBaja);
+		PrintEmployees (empleados, TAMCLIENTES);
+		idParaDarDeBaja = PedirEntero ("Ingrese el id a dar de baja: \n", 1, 1000);
+		baja = RemoveEmployee (empleados, TAMCLIENTES, idParaDarDeBaja);
 		if (baja == 0)
 		{
 			printf ("El empleado ha sido dado de baja\n");
@@ -135,7 +128,7 @@ int main(void)
 			printf ("No se encontró el empleado para dar de baja\n");
 		}
 
-		GuardarIdBajas (listaDadosDeBaja, TAM, idParaDarDeBaja);
+		GuardarIdBajas (listaDadosDeBaja, TAMCLIENTES, idParaDarDeBaja);
 
 		break;
 
@@ -150,7 +143,7 @@ int main(void)
 		switch (subopcion)
 		{
 			case 'a':
-				retornoSort = SortEmployees (empleados, TAM, 1);
+				retornoSort = SortEmployees (empleados, TAMCLIENTES, 1);
 				if (retornoSort == -1)
 				{
 					printf ("No hay elementos para ordenar");
@@ -158,15 +151,15 @@ int main(void)
 				else
 				{
 					printf ("    id     Nombre   Apellido  Salario  Sector\n"); //arreglar espaciado
-					PrintEmployees (empleados, TAM);
+					PrintEmployees (empleados, TAMCLIENTES);
 				} //6 10 15 6 4
 				break;
 
 			case 'b':
-				promSalarios = PromediarSalarios(empleados, TAM, &sumaSalariosMain);
+				promSalarios = PromediarSalarios(empleados, TAMCLIENTES, &sumaSalariosMain);
 				printf ("El total de los salarios es %f\n", sumaSalariosMain);
 
-				cantSuperanSalarioProm = ContarSuperanSalarioPromedio (empleados, TAM, promSalarios);
+				cantSuperanSalarioProm = ContarSuperanSalarioPromedio (empleados, TAMCLIENTES, promSalarios);
 				printf ("La cantidad de empleados que superan el salario promedio es: %d\n", cantSuperanSalarioProm);
 
 				break;

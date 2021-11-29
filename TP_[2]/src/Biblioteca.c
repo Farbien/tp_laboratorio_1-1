@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#define TAM 1000
+#define TAMCLIENTES 1000
 #define MIN 1
 #define MAX 10
 
@@ -28,55 +28,102 @@ int VerificarRango (int numero, int min, int max)
 /// @fn int PedirEntero(char[]): pide el ingreso de un número mediante un mensaje
 /// @param mensaje: pide el número
 /// @return retorna el número ingresado
-int PedirEntero (char mensaje[])
+
+int PedirEntero (char mensaje[], int min, int max)
 {
 	int i;
 	int retorno;
+	char numero[15];
 	int tam;
-	int numero;
-	char buffer[10];
-
-	char str[10];
-	//int val;
+	int numeroAux;
 
 	retorno = 1;
 
-	printf ("%s", mensaje);//pido el número
-	scanf ("%d", &numero);//lo tomo
-	itoa (numero, buffer, 10); //convierto el número en string
-	tam = strlen (buffer);
+	do {
+		printf ("%s", mensaje);
+		scanf ("%s", numero);
+		tam = strlen (numero);
 
-	for (i=0; i<tam; i++)
-	{
-		if (isdigit(buffer[i]) == 0)
-		{
-			printf ("Error!!!\n");
-			printf ("%s", mensaje);
-			scanf ("%d", &numero);
-			itoa (numero, buffer, 10);
-			tam = strlen (buffer);
-		}
-	}
+			for (i=0; i<tam; i++)
+			{
+				if (isdigit(numero[i]) == 0 /* || isalpha (numero[i] == 1)*/)
+				{
+					printf ("Error!!!\n");
+					printf ("%s", mensaje);
+					scanf ("%s", numero);
+					tam = strlen (numero);
+					i=0;
+				}
+			}
 
-	strcpy (str, buffer);
+			numeroAux = atoi (numero);
 
-	retorno = atoi (str);
+	}while (numeroAux < min || numeroAux > max);
+
+	retorno = numeroAux;
 
 	return retorno;
 }
+
 
 /// @fn float PedirFlotante(char[]): pide el ingreso de un número mediante un mensaje
 /// @param mensaje: pide el número flotante
 /// @return: retorna el número flotante
 float PedirFlotante (char mensaje[])
 {
-	float numero1;
+	float retorno;
+	char numero[30];
+	int tam;
 
 	printf ("%s", mensaje);
-	scanf ("%f", &numero1);
+	scanf ("%s", numero);
 
-	return numero1;
+	tam = strlen (numero);
+
+	while(CAL_esFloat(numero, tam) == 0)
+	{
+		printf ("%s", mensaje);
+		scanf ("%s", numero);
+
+		tam = strlen (numero);
+	}
+
+	retorno = atof (numero);
+
+	return retorno;
 }
+
+int CAL_esFloat(char cadena[], int dimension)
+{
+	int retorno;
+	int i;
+	int contadorPunto;
+
+	contadorPunto = 0;
+	retorno = 1;
+
+	for (i = 0; i < dimension && cadena[i] != '\0'; i++) {
+		if (i == 0 && (cadena[i] == '-' || cadena[i] == '+')) {
+			continue;
+		}
+		if (cadena[i] > '9' || cadena[i] < '0') {
+			if (cadena[i] == '.') {
+				contadorPunto++;
+				if (contadorPunto > 1) {
+					retorno = 0;
+					break;
+				}
+
+			} else {
+				retorno = 0;
+				break;
+			}
+		}
+	}
+
+	return retorno;
+}
+
 
 /// @fn void GuardarIdBajas(int[], int, int) Guarda un id en un array
 /// @param listado: es el listado donde va a guardarlo
@@ -143,7 +190,7 @@ int ModificarDato (Employee empleados[], int tam)
 
 	retornoMod = 0;
 
-	idModificacion = PedirEntero ("Ingrese su id para realizar una modificación: \n");
+	idModificacion = PedirEntero ("Ingrese su id para realizar una modificación: \n", 1, 1000);
 
 	posEmployeeMod = FindEmployeeById (empleados, tam, idModificacion);
 
@@ -175,7 +222,7 @@ int ModificarDato (Employee empleados[], int tam)
 		break;
 
 	case 4:
-		sectorMod = PedirEntero ("Ingrese el nuevo sector: \n");
+		sectorMod = PedirEntero ("Ingrese el nuevo sector: \n", MIN, MAX);
 		empleados[posEmployeeMod].sector = sectorMod;
 		printf ("Se ha modificado el sector.");
 		retornoMod = 1;
@@ -191,7 +238,7 @@ int ModificarDato (Employee empleados[], int tam)
 /// @param listaIdBajas: es la lista de los ids dados de baja
 /// @param tamIdBajas: es el tamaño de la lista de los ids dados de baja
 /// @return retorna el id generado
-int IdAutomatico (Employee empleados[], int tam, int listaIdBajas[], int tamIdBajas)
+int IdAutomatico1 (Employee empleados[], int tam, int listaIdBajas[], int tamIdBajas)
 {
 	int numeroId;
 	int i;
@@ -232,13 +279,13 @@ int PedirEmpleado (Employee empleados[], int tam, int listaBajas[], int* id, cha
 
 	retorno = 1;
 
-	idRandom = IdAutomatico (empleados, tam, listaBajas, tam);
+	idRandom = IdAutomatico1 (empleados, tam, listaBajas, tam);
 	*id = idRandom;
 	PedirCadena ("Ingrese su nombre: \n", name);
 	PedirCadena ("Ingrese su apellido: \n", lastName);
 	salario = PedirFlotante ("Ingrese su salario: \n");
 	*salary = salario;
-	sector1 = PedirEntero ("Ingrese el sector: \n");
+	sector1 = PedirEntero ("Ingrese el sector: \n", MIN, MAX);
 	*sector = sector1;
 	return retorno;
 }
@@ -360,7 +407,6 @@ int RemoveEmployee(Employee list[], int len, int id)
 
 	return retorno;
 }
-
 
 //Arreglar: ¿Qué pasa si no hay nada que ordenar?
 int SortEmployees(Employee list[], int len, int order) //  ordenar por apellido y sector  ////////// REVISAR Y TENER EN CUENTA LOS CASOS DE "ERROR" O EN LOS QUE PODRÍA LLEGAR A PASAR ALGO "RARO"

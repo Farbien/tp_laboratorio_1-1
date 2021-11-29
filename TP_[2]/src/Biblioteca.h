@@ -17,6 +17,7 @@ typedef struct{
 	int isEmpty; //estado
 }Employee;
 
+int CAL_esFloat(char cadena[], int dimension);
 void ArregloNombrePropio (char cadena[]);
 int ContarSuperanSalarioPromedio (Employee list[], int tam, float salarioPromedio);
 int VerificarRango (int numero, int min, int max);
@@ -26,10 +27,10 @@ int ModificarDato (Employee empleados[], int tam);
 float PedirFlotante (char mensaje[]);
 /*int PedirFlotante (char mensaje[], float* numero);*/
 /* int PedirEntero (char mensaje[], int* numero);*/
-int PedirEntero (char mensaje[]);
+int PedirEntero (char mensaje[], int min, int max);
 int PedirCadena (char mensaje[], char cadena[]);
 /*int IdAutomatico (Employee empleados[], int tam, int listaIdBajas[], int tamIdBajas);*/
-int IdAutomatico (Employee empleados[], int tam, int listaIdBajas[], int tamIdBajas);
+int IdAutomatico1 (Employee empleados[], int tam, int listaIdBajas[], int tamIdBajas);
 //int PedirEmpleado (Employee empleados[], int tam, int listaBajas[], int* id, char lastName[], char name[], float* salary, int* sector);
 int PedirEmpleado (Employee empleados[], int tam, int listaBajas[], int* id, char Name[], char lastName[], float* salary, int* sector);
 int InitEmployees(Employee list[], int tam);

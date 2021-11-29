@@ -17,7 +17,7 @@ int controller_loadFromText(char* path , LinkedList* pArrayListEmployee)
 
 	pArchivo = fopen(path, "r");
 
-	if(pArchivo != NULL)
+	if(pArchivo != NULL && pArrayListEmployee != NULL)
 	{
 		retornoParser = parser_EmployeeFromText (pArchivo, pArrayListEmployee);
 		if (retornoParser == 1)
@@ -48,7 +48,7 @@ int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
 
 	pArchivo = fopen (path, "rb");
 
-	if (pArchivo != NULL)
+	if (pArchivo != NULL && pArrayListEmployee != NULL)
 	{
 		retornoParser = parser_EmployeeFromBinary (pArchivo, pArrayListEmployee);
 		if (retornoParser == 1)
@@ -105,7 +105,10 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
 	nuevoSueldo = PedirEntero ("Ingrese el sueldo: \n");
 	employee_setSueldo (empleado, nuevoSueldo);
 
-	retornoAdd = ll_add (pArrayListEmployee, empleado);
+	if (pArrayListEmployee != NULL)
+	{
+		retornoAdd = ll_add (pArrayListEmployee, empleado);
+	}
 
 	fileUltimoId = fopen ("ultimoId.txt", "w");
 	lastId = nuevoId;
@@ -136,18 +139,14 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
 	int retornoSetSueldo;
 	int retornoSetHoras;
 	int indiceEmpleado;
-	int retornoMostrar;
 
 	retorno = 0;
 
-	tamLista = ll_len(pArrayListEmployee);
-
-	retornoMostrar = MostrarEmpleados (pArrayListEmployee, tamLista);
-
-	if (retornoMostrar == 0)
+	if (pArrayListEmployee != NULL)
 	{
-		printf ("No hay empleados que mostrar");
-	}
+			tamLista = ll_len(pArrayListEmployee);
+
+	MostrarEmpleados (pArrayListEmployee, tamLista);
 
 	idMod = PedirEntero ("Ingrese el id del empleado a modificar: ");
 
@@ -199,9 +198,8 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
 		}
 		break;
 	}
-
-	/*Preg si con esto ya lo edita en la linked*/
-	ll_set(pArrayListEmployee, indiceEmpleado, empleadoBuscado);
+		ll_set(pArrayListEmployee, indiceEmpleado, empleadoBuscado);
+	}
 
     return retorno;
 }
@@ -224,14 +222,11 @@ int controller_removeEmployee(LinkedList* pArrayListEmployee)
 	int retornoMostrar;
 	retorno = 0;
 
+	if (pArrayListEmployee != NULL)
+	{
 	tamLista = ll_len(pArrayListEmployee);
 
 	retornoMostrar = MostrarEmpleados (pArrayListEmployee, tamLista);
-
-	if (retornoMostrar == 0)
-	{
-		printf ("No hay empleados cargados");
-	}
 
 	idBuscado = PedirEntero("Ingrese el id del empleado a remover: ");
 
@@ -242,15 +237,17 @@ int controller_removeEmployee(LinkedList* pArrayListEmployee)
 	retornoRemove = ll_remove(pArrayListEmployee, indiceEmpleado);
 
 	if (retornoRemove == 0)
-	{
-		printf ("Se eliminó el empleado con éxito");
-		retorno = 1;
+		{
+			printf ("Se eliminó el empleado con éxito");
+			retorno = 1;
+		}
+		else
+		{
+			printf ("Hubo un error al eliminar el empleado, inténtelo de nuevo");
+			retorno = -1;
+		}
 	}
-	else
-	{
-		printf ("Hubo un error al eliminar el empleado, inténtelo de nuevo");
-		retorno = -1;
-	}
+
 
 	employee_delete (empleadoARemover);
 
@@ -265,8 +262,7 @@ int controller_removeEmployee(LinkedList* pArrayListEmployee)
  *
  */
 
-
-int controller_ListEmployee(LinkedList* pArrayListEmployee)
+ int controller_ListEmployee(LinkedList* pArrayListEmployee)
 {
    int retorno;
    int retornoEmpleado;
@@ -276,24 +272,30 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
 
    retorno = 0;
 
-   tam = ll_len (pArrayListEmployee);
 
    printf ("%7s | %10s | %12s|  %7s", "id", "Nombre", "Horas Trabajadas", "Sueldo\n");
 
+if (pArrayListEmployee != NULL)
+{
+   tam = ll_len (pArrayListEmployee);
+
    for (i=0; i<tam; i++)
    {
-	   empleado = ll_get(pArrayListEmployee, i);
+	   empleado = (Employee*) ll_get(pArrayListEmployee, i);
 
 	   retornoEmpleado = PrintOneEmployee (empleado);
+
+		retorno = 1;
 
 	   if (retornoEmpleado == 0)
 	   {
 	    	printf ("No se encontró el empleado");
 	   }
    }
-
+}
    return retorno;
 }
+
 
 /** \brief Ordenar empleados
  *
@@ -309,10 +311,13 @@ int controller_sortEmployee(LinkedList* pArrayListEmployee)
 
 	retorno = 0;
 
-	retornoSort = ll_sort (pArrayListEmployee, CompararElementos, 1);
-	if (retornoSort )
+	if (pArrayListEmployee != NULL)
 	{
-		retorno = 1;
+		retornoSort = ll_sort (pArrayListEmployee, CompararElementos, 1);
+		if (retornoSort )
+		{
+			retorno = 1;
+		}
 	}
 
 	return retorno;
@@ -347,7 +352,10 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 
 	pArchivo = fopen (path, "w");
 
-	tamLista = ll_len(pArrayListEmployee);
+
+	if (pArrayListEmployee != NULL)
+	{
+		tamLista = ll_len(pArrayListEmployee);
 
 	for (i=0; i<tamLista; i++)
 	{
@@ -379,6 +387,8 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 		fprintf (pArchivo, "%d,%s,%d,%d\n", auxId, auxNombre, auxHoras, auxSueldo);
 		retorno = 1;
 	}
+	}
+
 
 	fclose (pArchivo);
 
@@ -407,11 +417,14 @@ int controller_saveAsBinary(char* path , LinkedList* pArrayListEmployee)
 
 	pArchivo = fopen (path, "wb");
 
-	for (i=0; i<tamLista; i++)
+	if (path != NULL && pArrayListEmployee != NULL)
 	{
-		empleado = ll_get (pArrayListEmployee, i);
-		fwrite (empleado, sizeof(Employee), 1, pArchivo);
-		retorno = 1;
+		for (i=0; i<tamLista; i++)
+		{
+			empleado = ll_get (pArrayListEmployee, i);
+			fwrite (empleado, sizeof(Employee), 1, pArchivo);
+			retorno = 1;
+		}
 	}
 
 	fclose (pArchivo);

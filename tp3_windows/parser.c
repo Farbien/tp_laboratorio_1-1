@@ -1,4 +1,5 @@
 #include "Parser.h"
+#include <stdio.h>
 
 /** \brief Parsea los datos de los empleados desde el archivo data.csv (modo texto).
  *
@@ -57,22 +58,43 @@ int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 {
 	Employee* empleado;
 	int retorno;
-	int retornoAdd;
 
 	retorno = 0;
 
-	while (!feof(pFile))
+	if (pArrayListEmployee != NULL && pFile != NULL)
 	{
-		empleado = employee_new ();
+		do{
+			empleado = employee_new ();
 
-		fread(empleado, sizeof (Employee), 1, pFile); //se guarda en empleado
+			if (empleado != NULL)
+			{
+				fread (empleado, sizeof (Employee), 1, pFile);
 
-		retornoAdd = ll_add(pArrayListEmployee, empleado);
+				if (feof(pFile))
+				{
+					break;
+				}
+				else
+				{
+					ll_add(pArrayListEmployee, empleado);
+				}
+			}
 
-		if (retornoAdd == 0)
-		{
-			retorno = 1;
-		}
+
+		}while(!feof(pFile));
 	}
+
+	/*do{
+
+		fread (empleado, sizeof (Employee), 1, pFile);
+
+		ll_add (pArrayListEmployee, empleado);
+
+		}while(!feof(pFile));
+	} */
+
+
+
+
     return retorno;
 }
